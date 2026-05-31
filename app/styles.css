@@ -1,30 +1,5 @@
-@import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
-@font-face { font-family: 'Bushcraft'; src: url('https://code-master.be/fonts/Bushcraft.otf') format('opentype'); font-weight: 900; font-style: normal; font-display: swap; }
+  <style>
+@font-face { font-family: 'Bushcraft'; src: url('./preview-Bushcraft-900.otf') format('opentype'); font-weight: 900; font-style: normal; font-display: swap; }
 
 /* Reset base styles */
 html, body { margin: 0; padding: 0; }
@@ -204,3 +179,4 @@ hr { border: 0; padding: 0; margin: 0; height: 0; color: inherit; background: tr
 .s106 { display: block; position: absolute; max-width: 100%; flex-direction: row; flex-wrap: nowrap; justify-content: normal; align-items: normal; align-content: normal; gap: normal; top: 6760.2px; bottom: 0px; left: 0px; z-index: 0; overflow: hidden; overflow-x: hidden; overflow-y: hidden; }
 .s107 { display: block; position: absolute; max-width: 100%; flex-direction: row; flex-wrap: nowrap; justify-content: normal; align-items: normal; align-content: normal; gap: normal; top: 6641.85px; right: 0px; bottom: 0px; left: 906.4px; overflow: hidden; overflow-x: hidden; overflow-y: hidden; }
 
+  </style>
