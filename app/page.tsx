@@ -62,25 +62,73 @@ const PROJECTS = [
     title: "InsightLM",
     subtitle: "AI Document Intelligence Workspace",
     description:
-      "Full-stack document intelligence platform using RAG, Qdrant, and Hugging Face models for grounded document conversations with advanced CRAG pipelines, query rewriting, and real-time SSE streaming.",
-    tech: ["React", "Node.js", "Qdrant", "Hugging Face", "RAG"],
+      "Full-stack document intelligence platform with Corrective RAG (CRAG), Qdrant vector search, and Hugging Face models. Features intelligent query rewriting, batch relevance judging, adaptive retry with feedback, and real-time SSE streaming with an integrated in-app PDF viewer.",
+    tech: ["Next.js", "Express.js", "Qdrant", "Hugging Face", "RAG"],
     gradient: "linear-gradient(135deg, #ff6563, #ffbb71)",
+    github: "https://github.com/SamarthPD-21/InsightLM",
+    live: "https://insight-lm-gamma.vercel.app",
+    language: "TypeScript",
+    languageColor: "#3178c6",
   },
   {
     title: "Clonify",
     subtitle: "AI Website Cloner Agent",
     description:
-      "AI-powered website cloning agent using Playwright and Gemini that analyzes and recreates websites from a single URL with self-improving generation pipelines and automated evaluation loops.",
-    tech: ["Playwright", "Gemini API", "TypeScript", "AI Agent"],
+      "Conversational CLI agent that scrapes and clones any website using Playwright + Gemini AI. Analyzes design, extracts content, and generates faithful HTML/CSS/JS clones with self-improving agent loops evaluating quality \u2265 7/10.",
+    tech: ["Playwright", "Gemini API", "Node.js", "AI Agent"],
     gradient: "linear-gradient(135deg, #6da0c4, #95b77e)",
+    github: "https://github.com/SamarthPD-21/clonify",
+    live: "",
+    language: "HTML",
+    languageColor: "#e34c26",
   },
   {
-    title: "GitUpskill",
+    title: "GitUpSkill",
     subtitle: "AI Developer Skill Recommendation",
     description:
-      "AI-powered platform analyzing GitHub repositories to identify developer strengths, skill gaps, and growth opportunities with personalized learning roadmap generation.",
-    tech: ["Next.js", "GitHub API", "OAuth", "AI/ML"],
+      "AI-powered platform analyzing GitHub repositories to identify developer strengths and skill gaps. Features GitHub OAuth, intelligent README analysis, deterministic recommendation engine, and personalized upskilling roadmap generation.",
+    tech: ["Next.js", "Spring Boot", "MongoDB", "OAuth 2.0"],
     gradient: "linear-gradient(135deg, #d4a76a, #ff6563)",
+    github: "https://github.com/SamarthPD-21/GitUpSkill",
+    live: "https://end-term-spring.vercel.app",
+    language: "Java",
+    languageColor: "#b07219",
+  },
+  {
+    title: "Personafy",
+    subtitle: "Persona-Driven AI Chat Experience",
+    description:
+      "Polished full-stack chatbot with switchable AI personas, each with unique system prompts and visual themes. Features premium glassmorphism UI, spring-based Framer Motion animations, typewriter streaming, and persistent local threading.",
+    tech: ["Next.js", "Gemini API", "Framer Motion", "Tailwind CSS"],
+    gradient: "linear-gradient(135deg, #a855f7, #6da0c4)",
+    github: "https://github.com/SamarthPD-21/Personafy",
+    live: "https://personafy-nine.vercel.app/",
+    language: "TypeScript",
+    languageColor: "#3178c6",
+  },
+  {
+    title: "RideShare",
+    subtitle: "Full-Stack Ride-Sharing Platform",
+    description:
+      "Complete Uber-like ride-sharing application with JWT authentication, role-based access control (Passengers & Drivers), comprehensive ride lifecycle tracking with timestamps, duration calculation, and a glassmorphic dark-mode UI.",
+    tech: ["Spring Boot", "MongoDB", "Next.js", "JWT"],
+    gradient: "linear-gradient(135deg, #95b77e, #d4a76a)",
+    github: "https://github.com/SamarthPD-21/Uber-Clone",
+    live: "https://ride-share-silk-rho.vercel.app",
+    language: "Java",
+    languageColor: "#b07219",
+  },
+  {
+    title: "GFI Finder",
+    subtitle: "Open-Source Contribution Discovery",
+    description:
+      "Helps developers discover active GitHub repos and beginner-friendly issues worth contributing to. Filters inactive repositories, ranks by stars, issue volume, and contributor activity, with detailed repo pages showing open issues.",
+    tech: ["Next.js", "GitHub API", "Tailwind CSS"],
+    gradient: "linear-gradient(135deg, #ff6563, #a855f7)",
+    github: "https://github.com/SamarthPD-21/GFI_Finder",
+    live: "",
+    language: "TypeScript",
+    languageColor: "#3178c6",
   },
 ];
 
@@ -692,37 +740,103 @@ export default function Home() {
             <h2 className="section-heading anim-slide-up">
               About <span className="highlight">Me</span>
             </h2>
-            <div className="about-content anim-slide-up delay-1">
-              <p className="about-text">
-                Hey there! I&apos;m{" "}
-                <strong>Samarth Deshpande</strong>, a B.S. Computer
-                Science student at <strong>BITS Pilani</strong> and a
-                passionate Software Developer based in Bengaluru,
-                India. I build full-stack applications, AI-powered
-                tools, and modern web experiences. From document
-                intelligence platforms to AI website cloners, I love
-                turning complex ideas into elegant, scalable
-                solutions.
-              </p>
-            </div>
-            <div className="stats-grid anim-slide-up delay-2">
-              <div className="stat-item">
-                <div className="stat-number">
-                  <AnimatedCounter target={3} suffix="+" />
+            <div className="about-layout">
+              {/* Left column — text + facts */}
+              <div className="about-intro anim-slide-up delay-1">
+                <p className="about-greeting">Hello, I&apos;m Samarth</p>
+                <h3 className="about-headline">
+                  I build{" "}
+                  <span className="accent-gradient">full-stack apps</span>,{" "}
+                  AI-powered tools &amp; modern web experiences
+                </h3>
+                <p className="about-description">
+                  B.S. Computer Science student at <strong>BITS Pilani</strong>{" "}
+                  and a passionate Software Developer based in Bengaluru,
+                  India. From document intelligence platforms with Corrective RAG
+                  pipelines to AI website cloner agents, I love turning complex
+                  ideas into elegant, scalable solutions that make a real impact.
+                </p>
+                <div className="about-quick-facts anim-slide-up delay-2">
+                  <div className="quick-fact">
+                    <span className="quick-fact-icon">🎓</span>
+                    <span className="quick-fact-text">BITS Pilani &apos;28</span>
+                  </div>
+                  <div className="quick-fact">
+                    <span className="quick-fact-icon">📍</span>
+                    <span className="quick-fact-text">Bengaluru, India</span>
+                  </div>
+                  <div className="quick-fact">
+                    <span className="quick-fact-icon">💼</span>
+                    <span className="quick-fact-text">Freelance Experience</span>
+                  </div>
+                  <div className="quick-fact">
+                    <span className="quick-fact-icon">🏆</span>
+                    <span className="quick-fact-text">Meta PyTorch Qualified</span>
+                  </div>
                 </div>
-                <div className="stat-label">Projects Built</div>
+                <div className="about-cta-row anim-slide-up delay-3">
+                  <a
+                    href="https://github.com/SamarthPD-21"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn--accent"
+                  >
+                    💻 View GitHub
+                  </a>
+                  <a href="#contact" className="btn--ghost">
+                    ✉️ Get In Touch
+                  </a>
+                </div>
               </div>
-              <div className="stat-item">
-                <div className="stat-number">
-                  <AnimatedCounter target={25} suffix="+" />
+
+              {/* Right column — stats panel */}
+              <div className="about-stats-panel anim-slide-up delay-2">
+                <div className="stats-card">
+                  <h4 className="stats-card-title">By the Numbers</h4>
+                  <div className="stats-card-grid">
+                    <div className="stat-block">
+                      <div className="stat-block-number">
+                        <AnimatedCounter target={45} />
+                      </div>
+                      <div className="stat-block-label">Repositories</div>
+                    </div>
+                    <div className="stat-block">
+                      <div className="stat-block-number">
+                        <AnimatedCounter target={25} suffix="+" />
+                      </div>
+                      <div className="stat-block-label">Technologies</div>
+                    </div>
+                    <div className="stat-block">
+                      <div className="stat-block-number">
+                        <AnimatedCounter target={1696} />
+                      </div>
+                      <div className="stat-block-label">CodeChef Rating</div>
+                    </div>
+                    <div className="stat-block">
+                      <div className="stat-block-number">
+                        <AnimatedCounter target={6} suffix="+" />
+                      </div>
+                      <div className="stat-block-label">Featured Projects</div>
+                    </div>
+                  </div>
+                  <div className="tech-orbit">
+                    {["React", "Next.js", "Spring Boot", "Node.js", "Python", "Java", "TypeScript", "MongoDB", "Docker", "Gemini AI"].map((tech, i) => (
+                      <span
+                        key={tech}
+                        className="orbit-tag"
+                        style={{
+                          background: [
+                            "#ff6563", "#1c2e57", "#95b77e", "#6da0c4",
+                            "#d4a76a", "#b07219", "#3178c6", "#47A248",
+                            "#2496ED", "#ffbb71",
+                          ][i],
+                        }}
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-                <div className="stat-label">Technologies</div>
-              </div>
-              <div className="stat-item">
-                <div className="stat-number">
-                  <AnimatedCounter target={1696} />
-                </div>
-                <div className="stat-label">CodeChef Rating</div>
               </div>
             </div>
           </div>
@@ -827,12 +941,32 @@ export default function Home() {
               Featured{" "}
               <span className="highlight">Projects</span>
             </h2>
+            <div className="github-stats-bar anim-slide-up delay-1">
+              <div className="github-stat">
+                <div className="github-stat-number">
+                  <AnimatedCounter target={45} />
+                </div>
+                <div className="github-stat-label">Repositories</div>
+              </div>
+              <div className="github-stat">
+                <div className="github-stat-number">
+                  <AnimatedCounter target={6} />
+                </div>
+                <div className="github-stat-label">Featured</div>
+              </div>
+              <div className="github-stat">
+                <div className="github-stat-number">
+                  <AnimatedCounter target={4} />
+                </div>
+                <div className="github-stat-label">Live Demos</div>
+              </div>
+            </div>
             <div className="projects-grid">
               {PROJECTS.map((project, i) => (
                 <TiltCard
                   key={project.title}
                   className={`project-card anim-scale-in delay-${
-                    i + 1
+                    (i % 3) + 1
                   }`}
                 >
                   <div
@@ -840,12 +974,23 @@ export default function Home() {
                     style={{ background: project.gradient }}
                   />
                   <div className="project-card-body">
-                    <h3 className="project-card-title">
-                      {project.title}
-                    </h3>
-                    <p className="project-card-subtitle">
-                      {project.subtitle}
-                    </p>
+                    <div className="project-card-header">
+                      <div>
+                        <h3 className="project-card-title">
+                          {project.title}
+                        </h3>
+                        <p className="project-card-subtitle">
+                          {project.subtitle}
+                        </p>
+                      </div>
+                      <span className="project-card-language">
+                        <span
+                          className="language-dot"
+                          style={{ background: project.languageColor }}
+                        />
+                        {project.language}
+                      </span>
+                    </div>
                     <p className="project-card-desc">
                       {project.description}
                     </p>
@@ -856,9 +1001,39 @@ export default function Home() {
                         </span>
                       ))}
                     </div>
+                    <div className="project-card-links">
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="project-link project-link--github"
+                      >
+                        ⌨️ Source
+                      </a>
+                      {project.live && (
+                        <a
+                          href={project.live}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="project-link project-link--live"
+                        >
+                          🚀 Live Demo
+                        </a>
+                      )}
+                    </div>
                   </div>
                 </TiltCard>
               ))}
+            </div>
+            <div className="projects-section-footer anim-slide-up delay-3">
+              <a
+                href="https://github.com/SamarthPD-21"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="projects-github-link"
+              >
+                💻 View All 45 Repositories on GitHub →
+              </a>
             </div>
           </div>
         </section>
