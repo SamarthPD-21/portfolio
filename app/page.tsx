@@ -157,6 +157,7 @@ const EXPERIENCE = [
   {
     role: "Frontend Engineer (Freelance)",
     company: "VeBlyss Global",
+    link: "https://veblyssglobal.com/",
     date: "Sep 2025 – Oct 2025",
     bullets: [
       "Built responsive, professional export-business website serving international customers across multiple product categories",
@@ -369,14 +370,48 @@ function TiltCard({
 /* ─── Logo Component ─── */
 function Logo() {
   return (
-    <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
-      <rect width="100" height="100" rx="20" fill="url(#logo-grad)" />
-      <path d="M55 35 C 55 20, 25 20, 25 35 C 25 50, 55 50, 55 65 C 55 80, 25 80, 25 65" stroke="white" strokeWidth="8" strokeLinecap="round" fill="none"/>
-      <path d="M45 25 L 65 25 C 85 25, 85 75, 65 75 L 45 75 Z" stroke="white" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+    <svg width="30" height="30" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
+      {/* Soft outer glow/shadow */}
+      <rect x="2" y="2" width="96" height="96" rx="28" fill="url(#logo-grad)" filter="url(#logo-drop-shadow)" />
+      
+      {/* Glossy glass reflection overlay */}
+      <rect x="2" y="2" width="96" height="96" rx="28" fill="url(#logo-glass-overlay)" />
+      
+      {/* Glowing Monogram Letters (S and D) */}
+      {/* S (neon blur) */}
+      <path d="M54 35 C 54 22, 26 22, 26 35 C 26 48, 54 48, 54 61 C 54 74, 26 74, 26 61" 
+            stroke="white" strokeWidth="9" strokeLinecap="round" fill="none" filter="url(#logo-glow-filter)" />
+      {/* S (sharp foreground) */}
+      <path d="M54 35 C 54 22, 26 22, 26 35 C 26 48, 54 48, 54 61 C 54 74, 26 74, 26 61" 
+            stroke="white" strokeWidth="9" strokeLinecap="round" fill="none" />
+            
+      {/* D (neon blur) */}
+      <path d="M46 25 L 63 25 C 81 25, 81 71, 63 71 L 46 71 Z" 
+            stroke="white" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" fill="none" filter="url(#logo-glow-filter)" />
+      {/* D (sharp foreground) */}
+      <path d="M46 25 L 63 25 C 81 25, 81 71, 63 71 L 46 71 Z" 
+            stroke="white" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+
       <defs>
-        <linearGradient id="logo-grad" x1="0" y1="0" x2="100" y2="100">
-          <stop offset="0%" stopColor="#ffbb71" />
-          <stop offset="100%" stopColor="#ff6563" />
+        <filter id="logo-drop-shadow" x="0" y="0" width="100" height="100" filterUnits="userSpaceOnUse">
+          <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#ff6563" floodOpacity="0.4" />
+        </filter>
+        <filter id="logo-glow-filter" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+        <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#ffcc80" />
+          <stop offset="50%" stopColor="#ff6563" />
+          <stop offset="100%" stopColor="#cf3d3c" />
+        </linearGradient>
+        <linearGradient id="logo-glass-overlay" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="white" stopOpacity={0.35} />
+          <stop offset="40%" stopColor="white" stopOpacity={0.1} />
+          <stop offset="100%" stopColor="black" stopOpacity={0.15} />
         </linearGradient>
       </defs>
     </svg>
@@ -903,7 +938,17 @@ export default function Home() {
                     </span>
                     <h3 className="timeline-role">{exp.role}</h3>
                     <h4 className="timeline-company">
-                      {exp.company}
+                      {exp.link ? (
+                        <a
+                          href={exp.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {exp.company} ↗
+                        </a>
+                      ) : (
+                        exp.company
+                      )}
                     </h4>
                     <ul className="timeline-bullets">
                       {exp.bullets.map((bullet, j) => (
