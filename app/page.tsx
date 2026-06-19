@@ -1,495 +1,46 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useState } from "react";
 
-/* ═══════════════════════════════════════════════════
-   RESUME DATA
-   ═══════════════════════════════════════════════════ */
-const ROLES = [
-  "Software Developer",
-  "Full-Stack Engineer",
-  "AI Enthusiast",
-  "CS @ BITS Pilani",
-];
-
-const SKILLS = [
-  {
-    category: "Languages",
-    icon: "⚡",
-    color: "#ff6563",
-    items: ["Java", "JavaScript", "TypeScript", "Python", "C++"],
-  },
-  {
-    category: "Frontend",
-    icon: "🎨",
-    color: "#ffbb71",
-    items: ["React.js", "Next.js", "Tailwind CSS", "HTML5", "CSS3"],
-  },
-  {
-    category: "Backend",
-    icon: "⚙️",
-    color: "#6da0c4",
-    items: ["Spring Boot", "Node.js", "Express.js", "REST APIs", "JWT"],
-  },
-  {
-    category: "Databases",
-    icon: "🗄️",
-    color: "#95b77e",
-    items: ["MongoDB", "PostgreSQL", "Redis", "Qdrant"],
-  },
-  {
-    category: "Cloud & DevOps",
-    icon: "☁️",
-    color: "#b04447",
-    items: ["Git", "GitHub", "Firebase", "Docker", "Vercel", "Render"],
-  },
-  {
-    category: "AI / ML",
-    icon: "🤖",
-    color: "#d4a76a",
-    items: [
-      "RAG",
-      "LangChain",
-      "Hugging Face",
-      "Gemini API",
-      "Vector Search",
-    ],
-  },
-];
-
-const PROJECTS = [
-  {
-    title: "InsightLM",
-    subtitle: "AI Document Intelligence Workspace",
-    description:
-      "Full-stack document intelligence platform with Corrective RAG (CRAG), Qdrant vector search, and Hugging Face models. Features intelligent query rewriting, batch relevance judging, adaptive retry with feedback, and real-time SSE streaming with an integrated in-app PDF viewer.",
-    tech: ["Next.js", "Express.js", "Qdrant", "Hugging Face", "RAG"],
-    gradient: "linear-gradient(135deg, #ff6563, #ffbb71)",
-    github: "https://github.com/SamarthPD-21/InsightLM",
-    live: "https://insight-lm-gamma.vercel.app",
-    language: "TypeScript",
-    languageColor: "#3178c6",
-  },
-  {
-    title: "Clonify",
-    subtitle: "AI Website Cloner Agent",
-    description:
-      "Conversational CLI agent that scrapes and clones any website using Playwright + Gemini AI. Analyzes design, extracts content, and generates faithful HTML/CSS/JS clones with self-improving agent loops evaluating quality \u2265 7/10.",
-    tech: ["Playwright", "Gemini API", "Node.js", "AI Agent"],
-    gradient: "linear-gradient(135deg, #6da0c4, #95b77e)",
-    github: "https://github.com/SamarthPD-21/clonify",
-    live: "",
-    language: "HTML",
-    languageColor: "#e34c26",
-  },
-  {
-    title: "GitUpSkill",
-    subtitle: "AI Developer Skill Recommendation",
-    description:
-      "AI-powered platform analyzing GitHub repositories to identify developer strengths and skill gaps. Features GitHub OAuth, intelligent README analysis, deterministic recommendation engine, and personalized upskilling roadmap generation.",
-    tech: ["Next.js", "Spring Boot", "MongoDB", "OAuth 2.0"],
-    gradient: "linear-gradient(135deg, #d4a76a, #ff6563)",
-    github: "https://github.com/SamarthPD-21/GitUpSkill",
-    live: "https://end-term-spring.vercel.app",
-    language: "Java",
-    languageColor: "#b07219",
-  },
-  {
-    title: "Personafy",
-    subtitle: "Persona-Driven AI Chat Experience",
-    description:
-      "Polished full-stack chatbot with switchable AI personas, each with unique system prompts and visual themes. Features premium glassmorphism UI, spring-based Framer Motion animations, typewriter streaming, and persistent local threading.",
-    tech: ["Next.js", "Gemini API", "Framer Motion", "Tailwind CSS"],
-    gradient: "linear-gradient(135deg, #a855f7, #6da0c4)",
-    github: "https://github.com/SamarthPD-21/Personafy",
-    live: "https://personafy-nine.vercel.app/",
-    language: "TypeScript",
-    languageColor: "#3178c6",
-  },
-  {
-    title: "RideShare",
-    subtitle: "Full-Stack Ride-Sharing Platform",
-    description:
-      "Complete Uber-like ride-sharing application with JWT authentication, role-based access control (Passengers & Drivers), comprehensive ride lifecycle tracking with timestamps, duration calculation, and a glassmorphic dark-mode UI.",
-    tech: ["Spring Boot", "MongoDB", "Next.js", "JWT"],
-    gradient: "linear-gradient(135deg, #95b77e, #d4a76a)",
-    github: "https://github.com/SamarthPD-21/Uber-Clone",
-    live: "https://ride-share-silk-rho.vercel.app",
-    language: "Java",
-    languageColor: "#b07219",
-  },
-  {
-    title: "GFI Finder",
-    subtitle: "Open-Source Contribution Discovery",
-    description:
-      "Helps developers discover active GitHub repos and beginner-friendly issues worth contributing to. Filters inactive repositories, ranks by stars, issue volume, and contributor activity, with detailed repo pages showing open issues.",
-    tech: ["Next.js", "GitHub API", "Tailwind CSS"],
-    gradient: "linear-gradient(135deg, #ff6563, #a855f7)",
-    github: "https://github.com/SamarthPD-21/GFI_Finder",
-    live: "",
-    language: "TypeScript",
-    languageColor: "#3178c6",
-  },
-];
-
-const ACHIEVEMENTS = [
-  {
-    icon: "🏆",
-    title: "Meta PyTorch Hackathon",
-    desc: "Qualified among 31,000+ participating teams in the OpenEnv Hackathon",
-    color: "#ff6563",
-  },
-  {
-    icon: "💻",
-    title: "LeetCode",
-    desc: "Active competitive programmer solving DSA challenges",
-    color: "#ffbb71",
-  },
-  {
-    icon: "⭐",
-    title: "CodeChef 3★",
-    desc: "Competitive programming rating: 1696",
-    color: "#6da0c4",
-  },
-];
-
-const EXPERIENCE = [
-  {
-    role: "Frontend Engineer (Freelance)",
-    company: "VeBlyss Global",
-    link: "https://veblyssglobal.com/",
-    date: "Sep 2025 – Oct 2025",
-    bullets: [
-      "Built responsive, professional export-business website serving international customers across multiple product categories",
-      "Designed product showcase sections for Leather, Copper, Jewellery, Handicrafts, Sustainable & Agricultural products",
-      "Integrated WhatsApp and Email enquiry workflows, improving customer communication and lead generation",
-      "Developed reusable UI components with optimized navigation using modern UI/UX principles",
-      "Delivered production-ready solutions with high client satisfaction, strengthening digital presence",
-    ],
-  },
-];
-
-/* ═══════════════════════════════════════════════════
-   HOOKS
-   ═══════════════════════════════════════════════════ */
-
-/* ─── Intersection Observer for scroll animations ─── */
-function useScrollAnimation() {
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-          }
-        });
-      },
-      { threshold: 0.08, rootMargin: "0px 0px -40px 0px" }
-    );
-
-    const targets = document.querySelectorAll(
-      ".anim-fade-in, .anim-slide-up, .anim-pop-in, .anim-scale-in, .animation--fade-in, .animation--pop-in, .animation--pop-fade-in"
-    );
-    targets.forEach((t) => observer.observe(t));
-    return () => observer.disconnect();
-  }, []);
-}
-
-/* ─── Parallax for header layers ─── */
-function useParallax() {
-  useEffect(() => {
-    let ticking = false;
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const scrollY = window.scrollY;
-          document
-            .querySelectorAll<HTMLElement>("[data-parallax]")
-            .forEach((el) => {
-              const speed = parseFloat(el.dataset.parallax || "0");
-              el.style.transform = `translateY(${scrollY * speed}px)`;
-            });
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-}
-
-/* ─── Scroll progress (0-100) ─── */
-function useScrollProgress() {
-  const [progress, setProgress] = useState(0);
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      const docHeight =
-        document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(docHeight > 0 ? (scrollTop / docHeight) * 100 : 0);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-  return progress;
-}
-
-/* ═══════════════════════════════════════════════════
-   COMPONENTS
-   ═══════════════════════════════════════════════════ */
-
-/* ─── Typewriter ─── */
-function TypewriterText({ texts }: { texts: string[] }) {
-  const [displayText, setDisplayText] = useState("");
-  const [textIndex, setTextIndex] = useState(0);
-  const [charIndex, setCharIndex] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  useEffect(() => {
-    const currentText = texts[textIndex];
-    const speed = isDeleting ? 40 : 80;
-
-    const timer = setTimeout(() => {
-      if (!isDeleting) {
-        setDisplayText(currentText.substring(0, charIndex + 1));
-        setCharIndex((prev) => prev + 1);
-        if (charIndex + 1 === currentText.length) {
-          setTimeout(() => setIsDeleting(true), 2000);
-        }
-      } else {
-        setDisplayText(currentText.substring(0, charIndex - 1));
-        setCharIndex((prev) => prev - 1);
-        if (charIndex - 1 === 0) {
-          setIsDeleting(false);
-          setTextIndex((prev) => (prev + 1) % texts.length);
-        }
-      }
-    }, speed);
-
-    return () => clearTimeout(timer);
-  }, [charIndex, isDeleting, textIndex, texts]);
-
-  return (
-    <span className="typewriter-text">
-      {displayText}
-      <span className="typewriter-cursor">|</span>
-    </span>
-  );
-}
-
-/* ─── Animated Counter ─── */
-function AnimatedCounter({
-  target,
-  suffix = "",
-  duration = 2000,
-}: {
-  target: number;
-  suffix?: string;
-  duration?: number;
-}) {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-  const hasAnimated = useRef(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !hasAnimated.current) {
-          hasAnimated.current = true;
-          const start = performance.now();
-          const animate = (now: number) => {
-            const elapsed = now - start;
-            const progress = Math.min(elapsed / duration, 1);
-            const eased = 1 - Math.pow(1 - progress, 3);
-            setCount(Math.floor(eased * target));
-            if (progress < 1) requestAnimationFrame(animate);
-          };
-          requestAnimationFrame(animate);
-        }
-      },
-      { threshold: 0.5 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [target, duration]);
-
-  return (
-    <span ref={ref} className="counter-value">
-      {count}
-      {suffix}
-    </span>
-  );
-}
-
-/* ─── 3D Tilt Card ─── */
-function TiltCard({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    const card = cardRef.current;
-    if (!card) return;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -8;
-    const rotateY = ((x - centerX) / centerX) * 8;
-    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`;
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    const card = cardRef.current;
-    if (card) {
-      card.style.transform =
-        "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
-    }
-  }, []);
-
-  return (
-    <div
-      ref={cardRef}
-      className={`tilt-card ${className}`}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-    >
-      {children}
-    </div>
-  );
-}
-
-/* ─── Logo Component ─── */
-function Logo() {
-  return (
-    <svg width="30" height="30" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
-      {/* Soft outer glow/shadow */}
-      <rect x="2" y="2" width="96" height="96" rx="28" fill="url(#logo-grad)" filter="url(#logo-drop-shadow)" />
-      
-      {/* Glossy glass reflection overlay */}
-      <rect x="2" y="2" width="96" height="96" rx="28" fill="url(#logo-glass-overlay)" />
-      
-      {/* Glowing Monogram Letters (S and D) */}
-      {/* S (neon blur) */}
-      <path d="M54 35 C 54 22, 26 22, 26 35 C 26 48, 54 48, 54 61 C 54 74, 26 74, 26 61" 
-            stroke="white" strokeWidth="9" strokeLinecap="round" fill="none" filter="url(#logo-glow-filter)" />
-      {/* S (sharp foreground) */}
-      <path d="M54 35 C 54 22, 26 22, 26 35 C 26 48, 54 48, 54 61 C 54 74, 26 74, 26 61" 
-            stroke="white" strokeWidth="9" strokeLinecap="round" fill="none" />
-            
-      {/* D (neon blur) */}
-      <path d="M46 25 L 63 25 C 81 25, 81 71, 63 71 L 46 71 Z" 
-            stroke="white" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" fill="none" filter="url(#logo-glow-filter)" />
-      {/* D (sharp foreground) */}
-      <path d="M46 25 L 63 25 C 81 25, 81 71, 63 71 L 46 71 Z" 
-            stroke="white" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-
-      <defs>
-        <filter id="logo-drop-shadow" x="0" y="0" width="100" height="100" filterUnits="userSpaceOnUse">
-          <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#ff6563" floodOpacity="0.4" />
-        </filter>
-        <filter id="logo-glow-filter" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="3" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-        <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#ffcc80" />
-          <stop offset="50%" stopColor="#ff6563" />
-          <stop offset="100%" stopColor="#cf3d3c" />
-        </linearGradient>
-        <linearGradient id="logo-glass-overlay" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="white" stopOpacity={0.35} />
-          <stop offset="40%" stopColor="white" stopOpacity={0.1} />
-          <stop offset="100%" stopColor="black" stopOpacity={0.15} />
-        </linearGradient>
-      </defs>
-    </svg>
-  );
-}
-
-/* ─── Bird sprite ─── */
-function Bird({
-  size,
-  variant,
-}: {
-  size: "small" | "large";
-  variant: 1 | 2 | 3 | 4;
-}) {
-  const names = ["one", "two", "three", "four"];
-  return (
-    <div
-      className={`bird bird--${names[variant - 1]} bird--${size}`}
-      style={{
-        backgroundImage:
-          "url(https://code-master.be/images/illustrations/header/original/bird-cells.svg)",
-      }}
-    />
-  );
-}
+import {
+  AnimatedCounter,
+  Bird,
+  Logo,
+  TiltCard,
+  TypewriterText,
+} from "./components/portfolio/ui";
+import {
+  ACTIVE_SECTION_IDS,
+  ACHIEVEMENTS,
+  ASSET_PATHS,
+  EXPERIENCE,
+  NAV_ITEMS,
+  PROJECTS,
+  ROLES,
+  SKILLS,
+  TECH_ORBIT_COLORS,
+  TECH_ORBIT_ITEMS,
+} from "./lib/portfolio-data";
+import {
+  useActiveSection,
+  useParallax,
+  useScrollAnimation,
+  useScrollProgress,
+} from "./hooks/use-portfolio-effects";
 
 /* ═══════════════════════════════════════════════════
    MAIN PAGE
    ═══════════════════════════════════════════════════ */
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("hero");
+  const activeSection = useActiveSection(ACTIVE_SECTION_IDS);
 
   useScrollAnimation();
   useParallax();
   const scrollProgress = useScrollProgress();
 
-  /* Track active section for nav highlight */
-  useEffect(() => {
-    const ids = [
-      "hero",
-      "about",
-      "skills",
-      "experience",
-      "projects",
-      "achievements",
-      "contact",
-    ];
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id);
-        });
-      },
-      { threshold: 0.25 }
-    );
-    ids.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
-  }, []);
-
-  const HDR =
-    "https://code-master.be/images/illustrations/header/original";
-  const DEC =
-    "https://code-master.be/images/illustrations/decorations/original";
-  const FTR = "https://code-master.be/images/illustrations/footers";
-
-  const navItems = [
-    { id: "about", label: "about" },
-    { id: "skills", label: "skills" },
-    { id: "projects", label: "projects" },
-    { id: "contact", label: "contact" },
-  ];
-
   return (
-    <div className="app">
+    <div className="app relative overflow-hidden text-center">
       {/* ──── Scroll Progress Bar ──── */}
       <div
         className="scroll-progress"
@@ -564,7 +115,7 @@ export default function Home() {
           >
             <Logo />
           </a>
-          {navItems.map((item) => (
+          {NAV_ITEMS.map((item) => (
             <a
               key={item.id}
               href={`#${item.id}`}
@@ -594,7 +145,7 @@ export default function Home() {
         <div
           className="animation--fade header-background"
           style={{
-            backgroundImage: `url(${HDR}/home-header-background.svg)`,
+            backgroundImage: `url(${ASSET_PATHS.header}/home-header-background.svg)`,
           }}
         >
           {/* Sun */}
@@ -602,7 +153,7 @@ export default function Home() {
             className="animation--fade-in is-visible sun"
             data-parallax="0.1"
           >
-            <img src={`${HDR}/home-header-sun.svg`} alt="sun" />
+            <img src={`${ASSET_PATHS.header}/home-header-sun.svg`} alt="sun" />
           </div>
 
           {/* Mountains */}
@@ -611,7 +162,7 @@ export default function Home() {
             data-parallax="0.05"
           >
             <img
-              src={`${HDR}/home-header-montains.svg`}
+              src={`${ASSET_PATHS.header}/home-header-montains.svg`}
               alt="mountains"
             />
           </div>
@@ -621,20 +172,20 @@ export default function Home() {
             className="animation--pop-in is-visible cloud--left clouds"
             data-parallax="0.15"
           >
-            <img src={`${HDR}/cloud-left.svg`} alt="clouds" />
+            <img src={`${ASSET_PATHS.header}/cloud-left.svg`} alt="clouds" />
           </div>
           <div
             className="animation--pop-in is-visible cloud--left-center clouds"
             data-parallax="0.12"
           >
-            <img src={`${HDR}/cloud-left-center.svg`} alt="clouds" />
+            <img src={`${ASSET_PATHS.header}/cloud-left-center.svg`} alt="clouds" />
           </div>
           <div
             className="animation--pop-in is-visible cloud--right-center clouds"
             data-parallax="0.18"
           >
             <img
-              src={`${HDR}/cloud-right-center.svg`}
+              src={`${ASSET_PATHS.header}/cloud-right-center.svg`}
               alt="clouds"
             />
           </div>
@@ -642,7 +193,7 @@ export default function Home() {
             className="animation--pop-in is-visible cloud--right clouds"
             data-parallax="0.1"
           >
-            <img src={`${HDR}/cloud-right.svg`} alt="clouds" />
+            <img src={`${ASSET_PATHS.header}/cloud-right.svg`} alt="clouds" />
           </div>
 
           {/* Fourth forest layer */}
@@ -651,7 +202,7 @@ export default function Home() {
             data-parallax="0.08"
           >
             <img
-              src={`${HDR}/home-header-fourth-forest-layer.svg`}
+              src={`${ASSET_PATHS.header}/home-header-fourth-forest-layer.svg`}
               alt="forest"
             />
           </div>
@@ -690,7 +241,7 @@ export default function Home() {
             data-parallax="0.15"
           >
             <img
-              src={`${HDR}/home-header-third-forest-layer.svg`}
+              src={`${ASSET_PATHS.header}/home-header-third-forest-layer.svg`}
               alt="forest"
             />
           </div>
@@ -701,7 +252,7 @@ export default function Home() {
             data-parallax="0.2"
           >
             <img
-              src={`${HDR}/home-header-second-forest-layer.svg`}
+              src={`${ASSET_PATHS.header}/home-header-second-forest-layer.svg`}
               alt="forest"
             />
           </div>
@@ -725,7 +276,7 @@ export default function Home() {
             data-parallax="0.25"
           >
             <img
-              src={`${HDR}/home-header-first-forest-layer.svg`}
+              src={`${ASSET_PATHS.header}/home-header-first-forest-layer.svg`}
               alt="forest"
             />
           </div>
@@ -735,33 +286,33 @@ export default function Home() {
         <div className="container--tree">
           <div className="tree tree--left animation--pop-in is-visible">
             <img
-              src={`${DEC}/tree-close-up-light.svg`}
+              src={`${ASSET_PATHS.decorations}/tree-close-up-light.svg`}
               alt="tree"
             />
           </div>
           <div className="tree tree--left-blur animation--pop-in is-visible">
-            <img src={`${DEC}/tree-blur-left.png`} alt="tree" />
+            <img src={`${ASSET_PATHS.decorations}/tree-blur-left.png`} alt="tree" />
           </div>
           <div className="tree tree--right-top animation--pop-in is-visible delay-1">
             <img
-              src={`${DEC}/tree-close-up-dark.svg`}
+              src={`${ASSET_PATHS.decorations}/tree-close-up-dark.svg`}
               alt="tree"
             />
           </div>
           <div className="tree tree--right-top-center animation--pop-in is-visible delay-2">
             <img
-              src={`${DEC}/tree-close-up-dark.svg`}
+              src={`${ASSET_PATHS.decorations}/tree-close-up-dark.svg`}
               alt="tree"
             />
           </div>
           <div className="tree tree--right-bottom-center animation--pop-in is-visible delay-3">
             <img
-              src={`${DEC}/tree-close-up-dark.svg`}
+              src={`${ASSET_PATHS.decorations}/tree-close-up-dark.svg`}
               alt="tree"
             />
           </div>
           <div className="tree tree--right-bottom-blur animation--pop-in is-visible delay-4">
-            <img src={`${DEC}/tree-blur-right.png`} alt="tree" />
+            <img src={`${ASSET_PATHS.decorations}/tree-blur-right.png`} alt="tree" />
           </div>
         </div>
       </header>
@@ -769,10 +320,10 @@ export default function Home() {
       {/* ═══════════════════════════════════════════
           MAIN CONTENT
           ═══════════════════════════════════════════ */}
-      <main className="main">
+      <main className="main relative">
         {/* ───────── ABOUT ───────── */}
         <section className="section-wrapper about-section" id="about">
-          <div className="container">
+          <div className="container mx-auto px-6">
             <h2 className="section-heading anim-slide-up">
               About <span className="highlight">Me</span>
             </h2>
@@ -867,28 +418,11 @@ export default function Home() {
                             "#2496ED", "#ffbb71",
                           ][i],
                         }}
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ───────── SKILLS ───────── */}
+                      {TECH_ORBIT_ITEMS.map((tech, i) => (
         <section
           className="section-wrapper skills-section"
           id="skills"
-        >
-          <div className="skills-bg-mesh" />
-          <div className="container">
-            <h2 className="section-heading anim-slide-up">
-              My <span className="highlight">Skills</span>
-            </h2>
-            <div className="skills-grid">
+                          style={{ background: TECH_ORBIT_COLORS[i] }}
               {SKILLS.map((skill, i) => (
                 <TiltCard
                   key={skill.category}
@@ -923,7 +457,7 @@ export default function Home() {
           className="section-wrapper experience-section"
           id="experience"
         >
-          <div className="container">
+          <div className="container mx-auto px-6">
             <h2 className="section-heading anim-slide-up">
               Work <span className="highlight">Experience</span>
             </h2>
@@ -982,7 +516,7 @@ export default function Home() {
           className="section-wrapper projects-section"
           id="projects"
         >
-          <div className="container">
+          <div className="container mx-auto px-6">
             <h2 className="section-heading anim-slide-up">
               Featured{" "}
               <span className="highlight">Projects</span>
@@ -1089,7 +623,7 @@ export default function Home() {
           className="section-wrapper achievements-section"
           id="achievements"
         >
-          <div className="container">
+          <div className="container mx-auto px-6">
             <h2 className="section-heading anim-slide-up">
               <span className="highlight">Achievements</span>
             </h2>
@@ -1126,10 +660,10 @@ export default function Home() {
       <footer className="footer-home" id="contact">
         <img
           className="footer-top-shape"
-          src={`${FTR}/top-shape.svg`}
+          src={`${ASSET_PATHS.footer}/top-shape.svg`}
           alt="footer shape"
         />
-        <div className="container">
+        <div className="container mx-auto px-6">
           <div className="footer-primary">
             <div className="footer-contact">
               <h5 className="anim-slide-up">
@@ -1206,12 +740,12 @@ export default function Home() {
         </div>
 
         <img
-          src={`${FTR}/home-footer-decoration-1.svg`}
+          src={`${ASSET_PATHS.footer}/home-footer-decoration-1.svg`}
           alt=""
           className="footer-home-decoration-1"
         />
         <img
-          src={`${FTR}/home-footer-decoration-2.svg`}
+          src={`${ASSET_PATHS.footer}/home-footer-decoration-2.svg`}
           alt=""
           className="footer-home-decoration-2"
         />
