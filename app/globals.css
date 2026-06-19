@@ -205,6 +205,17 @@ html, body {
   padding: 0;
 }
 
+* {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
 body {
   font-family: var(--font-body);
   font-weight: 400;
@@ -303,16 +314,28 @@ ul, ol {
 .nav {
   position: fixed;
   z-index: 10000;
-  width: 100%;
+  width: calc(100% - 2em);
+  max-width: 800px;
+  top: 1em;
+  left: 50%;
+  transform: translateX(-50%);
   display: none;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(28, 45, 87, 0.08);
-  padding: 0.5em 0;
-  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50px;
+  padding: 0.8em 1.5em;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  animation: slideDownNav 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+@keyframes slideDownNav {
+  0% { transform: translate(-50%, -150%); opacity: 0; }
+  100% { transform: translate(-50%, 0); opacity: 1; }
 }
 
 .nav .nav-group-left {
@@ -333,26 +356,48 @@ ul, ol {
 }
 
 .nav .nav-item {
+  position: relative;
   font-family: var(--font-body);
   font-weight: 700;
-  opacity: 0.5;
+  opacity: 0.65;
   color: var(--color-primary);
   padding: 0.8em 1.2em;
   text-decoration: none;
   display: inline-block;
-  font-size: 1em;
+  font-size: 1.05em;
   text-transform: lowercase;
   letter-spacing: 0.05em;
-  transition: opacity 0.3s ease, color 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.nav .nav-item::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 4px;
+  left: 50%;
+  background: var(--gradient-primary);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transform: translateX(-50%);
+  border-radius: 2px;
+  opacity: 0;
 }
 
 .nav .nav-item:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.nav .nav-item:hover::after,
+.nav .nav-item.active::after {
+  width: 60%;
   opacity: 1;
 }
 
 .nav .nav-item.active {
   opacity: 1;
-  color: var(--color-accent);
+  color: var(--color-primary);
 }
 
 .nav .nav-monogram {
@@ -572,9 +617,17 @@ ul, ol {
 .header-background .forest__front-line { z-index: 10; }
 
 /* ── Birds ── */
+@keyframes flyAcross {
+  0% { transform: translate3d(-20vw, 0, 0); }
+  100% { transform: translate3d(120vw, 0, 0); }
+}
+
 .bird-container {
   position: absolute;
   z-index: 6;
+  left: 0;
+  will-change: transform;
+  animation: flyAcross 15s linear infinite;
 }
 
 .bird {
@@ -594,14 +647,10 @@ ul, ol {
   height: 125px;
 }
 
-.bird-container--one { top: 25%; left: 60%; z-index: 9; }
-.bird-container--two { top: 30%; left: 65%; z-index: 9; }
-.bird-container--three { top: 17%; left: 70%; z-index: 9; }
-.bird-container--four { top: 22%; left: 67%; z-index: 9; }
-.bird-container--five { top: 15%; left: 75%; }
-.bird-container--six { top: 20%; left: 80%; }
-.bird-container--seven { top: 16%; left: 85%; }
-.bird-container--eight { top: 24%; left: 78%; }
+.bird-container--one { top: 25%; animation-duration: 18s; animation-delay: -5s; z-index: 9; }
+.bird-container--two { top: 30%; animation-duration: 22s; animation-delay: -12s; z-index: 9; }
+.bird-container--three { top: 17%; animation-duration: 15s; animation-delay: -2s; z-index: 9; }
+.bird-container--four { top: 22%; animation-duration: 20s; animation-delay: -8s; z-index: 9; }
 
 .bird--one { animation-duration: 0.8s; }
 .bird--two { animation-duration: 0.9s; animation-delay: 0.1s; }
@@ -637,7 +686,7 @@ ul, ol {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 6;
+  z-index: 15;
 }
 
 .hero-content {

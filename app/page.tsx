@@ -366,6 +366,23 @@ function TiltCard({
   );
 }
 
+/* ─── Logo Component ─── */
+function Logo() {
+  return (
+    <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
+      <rect width="100" height="100" rx="20" fill="url(#logo-grad)" />
+      <path d="M55 35 C 55 20, 25 20, 25 35 C 25 50, 55 50, 55 65 C 55 80, 25 80, 25 65" stroke="white" strokeWidth="8" strokeLinecap="round" fill="none"/>
+      <path d="M45 25 L 65 25 C 85 25, 85 75, 65 75 L 45 75 Z" stroke="white" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+      <defs>
+        <linearGradient id="logo-grad" x1="0" y1="0" x2="100" y2="100">
+          <stop offset="0%" stopColor="#ffbb71" />
+          <stop offset="100%" stopColor="#ff6563" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+}
+
 /* ─── Bird sprite ─── */
 function Bird({
   size,
@@ -453,7 +470,7 @@ export default function Home() {
               activeSection === "about" ? "active" : ""
             }`}
           >
-            about
+            About
           </a>
           <a
             href="#skills"
@@ -461,12 +478,12 @@ export default function Home() {
               activeSection === "skills" ? "active" : ""
             }`}
           >
-            skills
+            Skills
           </a>
         </div>
         <div className="nav-group-center">
-          <a href="#hero" className="nav-item nav-monogram">
-            SD
+          <a href="#hero" className="nav-item nav-monogram" aria-label="Home">
+            <Logo />
           </a>
         </div>
         <div className="nav-group-right">
@@ -476,7 +493,7 @@ export default function Home() {
               activeSection === "projects" ? "active" : ""
             }`}
           >
-            projects
+            Projects
           </a>
           <a
             href="#contact"
@@ -484,7 +501,7 @@ export default function Home() {
               activeSection === "contact" ? "active" : ""
             }`}
           >
-            contact
+            Contact
           </a>
         </div>
       </nav>
@@ -508,8 +525,9 @@ export default function Home() {
             href="#hero"
             className="mobile-nav-logo"
             onClick={() => setMenuOpen(false)}
+            aria-label="Home"
           >
-            SD
+            <Logo />
           </a>
           {navItems.map((item) => (
             <a
@@ -603,21 +621,6 @@ export default function Home() {
             />
           </div>
 
-          {/* Small birds */}
-          {(["five", "six", "seven", "eight"] as const).map(
-            (name, i) => (
-              <div
-                key={name}
-                className={`bird-container bird-container--${name}`}
-              >
-                <Bird
-                  size="small"
-                  variant={((i % 4) + 1) as 1 | 2 | 3 | 4}
-                />
-              </div>
-            )
-          )}
-
           {/* ── Hero Title Overlay ── */}
           <div className="titles">
             <div className="hero-content">
@@ -681,9 +684,7 @@ export default function Home() {
                 />
               </div>
             )
-          )}
-
-          {/* Front forest layer */}
+          )}          {/* Front forest layer */}
           <div
             className="animation--pop-fade-in is-visible nature forest__front-line"
             data-parallax="0.25"
