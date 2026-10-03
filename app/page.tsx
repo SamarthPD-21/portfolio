@@ -1,142 +1,39 @@
-"use client";
-
-import { useState } from "react";
-
+import { ProjectsGrid } from "./components/portfolio/projects-section";
+import { ScrollEffects } from "./components/portfolio/scroll-effects";
+import { SiteNav } from "./components/portfolio/site-nav";
+import { Bird } from "./components/portfolio/static";
 import {
   AnimatedCounter,
-  Bird,
-  Logo,
   TiltCard,
   TypewriterText,
 } from "./components/portfolio/ui";
 import {
-  ACTIVE_SECTION_IDS,
   ACHIEVEMENTS,
   ASSET_PATHS,
   EXPERIENCE,
-  NAV_ITEMS,
+  GITHUB_REPO_COUNT,
+  GITHUB_URL,
+  LIVE_DEMO_COUNT,
+  OTHER_PROJECTS,
   PROJECTS,
   ROLES,
   SKILLS,
   TECH_ORBIT_COLORS,
   TECH_ORBIT_ITEMS,
 } from "./lib/portfolio-data";
-import {
-  useActiveSection,
-  useParallax,
-  useScrollAnimation,
-  useScrollProgress,
-} from "./hooks/use-portfolio-effects";
+
+const TECHNOLOGY_COUNT = new Set(SKILLS.flatMap((skill) => skill.items)).size;
 
 /* ═══════════════════════════════════════════════════
-   MAIN PAGE
+   MAIN PAGE — server-rendered; only the interactive
+   pieces (nav, scroll effects, counters, project
+   filters) ship as client components.
    ═══════════════════════════════════════════════════ */
 export default function Home() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const activeSection = useActiveSection(ACTIVE_SECTION_IDS);
-
-  useScrollAnimation();
-  useParallax();
-  const scrollProgress = useScrollProgress();
-
   return (
     <div className="app relative overflow-hidden text-center">
-      {/* ──── Scroll Progress Bar ──── */}
-      <div
-        className="scroll-progress"
-        style={{ width: `${scrollProgress}%` }}
-      />
-
-      {/* ──── Desktop Nav ──── */}
-      <nav className="nav">
-        <div className="nav-group-left">
-          <a
-            href="#about"
-            className={`nav-item ${
-              activeSection === "about" ? "active" : ""
-            }`}
-          >
-            About
-          </a>
-          <a
-            href="#skills"
-            className={`nav-item ${
-              activeSection === "skills" ? "active" : ""
-            }`}
-          >
-            Skills
-          </a>
-        </div>
-        <div className="nav-group-center">
-          <a href="#hero" className="nav-item nav-monogram" aria-label="Home">
-            <Logo />
-          </a>
-        </div>
-        <div className="nav-group-right">
-          <a
-            href="#projects"
-            className={`nav-item ${
-              activeSection === "projects" ? "active" : ""
-            }`}
-          >
-            Projects
-          </a>
-          <a
-            href="#contact"
-            className={`nav-item ${
-              activeSection === "contact" ? "active" : ""
-            }`}
-          >
-            Contact
-          </a>
-        </div>
-      </nav>
-
-      {/* ──── Mobile Burger ──── */}
-      <div
-        className="burger-container"
-        onClick={() => setMenuOpen((prev) => !prev)}
-      >
-        <div className={`burger ${menuOpen ? "open" : ""}`}>
-          <span />
-          <span />
-          <span />
-        </div>
-      </div>
-
-      {/* ──── Mobile Nav Overlay ──── */}
-      <nav className={`mobile-nav ${menuOpen ? "open" : ""}`}>
-        <div className="mobile-nav-inner">
-          <a
-            href="#hero"
-            className="mobile-nav-logo"
-            onClick={() => setMenuOpen(false)}
-            aria-label="Home"
-          >
-            <Logo />
-          </a>
-          {NAV_ITEMS.map((item) => (
-            <a
-              key={item.id}
-              href={`#${item.id}`}
-              className="mobile-nav-link"
-              onClick={() => setMenuOpen(false)}
-            >
-              {item.label}
-            </a>
-          ))}
-          <div className="mobile-nav-socials">
-            <a
-              href="https://github.com/SamarthPD-21"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitHub
-            </a>
-            <a href="mailto:Samarthpd2112@gmail.com">Email</a>
-          </div>
-        </div>
-      </nav>
+      <ScrollEffects />
+      <SiteNav />
 
       {/* ═══════════════════════════════════════════
           HERO — Parallax Forest Scene
@@ -153,7 +50,7 @@ export default function Home() {
             className="animation--fade-in is-visible sun"
             data-parallax="0.1"
           >
-            <img src={`${ASSET_PATHS.header}/home-header-sun.svg`} alt="sun" />
+            <img src={`${ASSET_PATHS.header}/home-header-sun.svg`} alt="" decoding="async" />
           </div>
 
           {/* Mountains */}
@@ -163,7 +60,7 @@ export default function Home() {
           >
             <img
               src={`${ASSET_PATHS.header}/home-header-montains.svg`}
-              alt="mountains"
+              alt="" decoding="async"
             />
           </div>
 
@@ -172,13 +69,13 @@ export default function Home() {
             className="animation--pop-in is-visible cloud--left clouds"
             data-parallax="0.15"
           >
-            <img src={`${ASSET_PATHS.header}/cloud-left.svg`} alt="clouds" />
+            <img src={`${ASSET_PATHS.header}/cloud-left.svg`} alt="" decoding="async" />
           </div>
           <div
             className="animation--pop-in is-visible cloud--left-center clouds"
             data-parallax="0.12"
           >
-            <img src={`${ASSET_PATHS.header}/cloud-left-center.svg`} alt="clouds" />
+            <img src={`${ASSET_PATHS.header}/cloud-left-center.svg`} alt="" decoding="async" />
           </div>
           <div
             className="animation--pop-in is-visible cloud--right-center clouds"
@@ -186,14 +83,14 @@ export default function Home() {
           >
             <img
               src={`${ASSET_PATHS.header}/cloud-right-center.svg`}
-              alt="clouds"
+              alt="" decoding="async"
             />
           </div>
           <div
             className="animation--pop-in is-visible cloud--right clouds"
             data-parallax="0.1"
           >
-            <img src={`${ASSET_PATHS.header}/cloud-right.svg`} alt="clouds" />
+            <img src={`${ASSET_PATHS.header}/cloud-right.svg`} alt="" decoding="async" />
           </div>
 
           {/* Fourth forest layer */}
@@ -203,7 +100,7 @@ export default function Home() {
           >
             <img
               src={`${ASSET_PATHS.header}/home-header-fourth-forest-layer.svg`}
-              alt="forest"
+              alt="" decoding="async"
             />
           </div>
 
@@ -242,7 +139,7 @@ export default function Home() {
           >
             <img
               src={`${ASSET_PATHS.header}/home-header-third-forest-layer.svg`}
-              alt="forest"
+              alt="" decoding="async"
             />
           </div>
 
@@ -253,7 +150,7 @@ export default function Home() {
           >
             <img
               src={`${ASSET_PATHS.header}/home-header-second-forest-layer.svg`}
-              alt="forest"
+              alt="" decoding="async"
             />
           </div>
 
@@ -270,14 +167,16 @@ export default function Home() {
                 />
               </div>
             )
-          )}          {/* Front forest layer */}
+          )}
+
+          {/* Front forest layer */}
           <div
             className="animation--pop-fade-in is-visible nature forest__front-line"
             data-parallax="0.25"
           >
             <img
               src={`${ASSET_PATHS.header}/home-header-first-forest-layer.svg`}
-              alt="forest"
+              alt="" decoding="async"
             />
           </div>
         </div>
@@ -287,32 +186,32 @@ export default function Home() {
           <div className="tree tree--left animation--pop-in is-visible">
             <img
               src={`${ASSET_PATHS.decorations}/tree-close-up-light.svg`}
-              alt="tree"
+              alt="" decoding="async"
             />
           </div>
           <div className="tree tree--left-blur animation--pop-in is-visible">
-            <img src={`${ASSET_PATHS.decorations}/tree-blur-left.png`} alt="tree" />
+            <img src={`${ASSET_PATHS.decorations}/tree-blur-left.png`} alt="" decoding="async" />
           </div>
           <div className="tree tree--right-top animation--pop-in is-visible delay-1">
             <img
               src={`${ASSET_PATHS.decorations}/tree-close-up-dark.svg`}
-              alt="tree"
+              alt="" decoding="async"
             />
           </div>
           <div className="tree tree--right-top-center animation--pop-in is-visible delay-2">
             <img
               src={`${ASSET_PATHS.decorations}/tree-close-up-dark.svg`}
-              alt="tree"
+              alt="" decoding="async"
             />
           </div>
           <div className="tree tree--right-bottom-center animation--pop-in is-visible delay-3">
             <img
               src={`${ASSET_PATHS.decorations}/tree-close-up-dark.svg`}
-              alt="tree"
+              alt="" decoding="async"
             />
           </div>
           <div className="tree tree--right-bottom-blur animation--pop-in is-visible delay-4">
-            <img src={`${ASSET_PATHS.decorations}/tree-blur-right.png`} alt="tree" />
+            <img src={`${ASSET_PATHS.decorations}/tree-blur-right.png`} alt="" decoding="async" />
           </div>
         </div>
       </header>
@@ -333,15 +232,16 @@ export default function Home() {
                 <p className="about-greeting">Hello, I&apos;m Samarth</p>
                 <h3 className="about-headline">
                   I build{" "}
-                  <span className="accent-gradient">full-stack apps</span>,{" "}
-                  AI-powered tools &amp; modern web experiences
+                  <span className="accent-gradient">systems from scratch</span>,{" "}
+                  full-stack apps &amp; AI-powered tools
                 </h3>
                 <p className="about-description">
                   B.S. Computer Science student at <strong>BITS Pilani</strong>{" "}
                   and a passionate Software Developer based in Bengaluru,
-                  India. From document intelligence platforms with Corrective RAG
-                  pipelines to AI website cloner agents, I love turning complex
-                  ideas into elegant, scalable solutions that make a real impact.
+                  India. From a relational database engine in C++ to Corrective
+                  RAG pipelines and a CodeMirror-level Overleaf extension, I like
+                  the projects where the hard part is the engineering, not the
+                  UI.
                 </p>
                 <div className="about-quick-facts anim-slide-up delay-2">
                   <div className="quick-fact">
@@ -363,7 +263,7 @@ export default function Home() {
                 </div>
                 <div className="about-cta-row anim-slide-up delay-3">
                   <a
-                    href="https://github.com/SamarthPD-21"
+                    href={GITHUB_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn--accent"
@@ -383,13 +283,13 @@ export default function Home() {
                   <div className="stats-card-grid">
                     <div className="stat-block">
                       <div className="stat-block-number">
-                        <AnimatedCounter target={45} />
+                        <AnimatedCounter target={GITHUB_REPO_COUNT} />
                       </div>
                       <div className="stat-block-label">Repositories</div>
                     </div>
                     <div className="stat-block">
                       <div className="stat-block-number">
-                        <AnimatedCounter target={25} suffix="+" />
+                        <AnimatedCounter target={TECHNOLOGY_COUNT} suffix="+" />
                       </div>
                       <div className="stat-block-label">Technologies</div>
                     </div>
@@ -401,28 +301,39 @@ export default function Home() {
                     </div>
                     <div className="stat-block">
                       <div className="stat-block-number">
-                        <AnimatedCounter target={6} suffix="+" />
+                        <AnimatedCounter target={PROJECTS.length} />
                       </div>
                       <div className="stat-block-label">Featured Projects</div>
                     </div>
                   </div>
                   <div className="tech-orbit">
-                    {["React", "Next.js", "Spring Boot", "Node.js", "Python", "Java", "TypeScript", "MongoDB", "Docker", "Gemini AI"].map((tech, i) => (
+                    {TECH_ORBIT_ITEMS.map((tech, i) => (
                       <span
                         key={tech}
                         className="orbit-tag"
-                        style={{
-                          background: [
-                            "#ff6563", "#1c2e57", "#95b77e", "#6da0c4",
-                            "#d4a76a", "#b07219", "#3178c6", "#47A248",
-                            "#2496ED", "#ffbb71",
-                          ][i],
-                        }}
-                      {TECH_ORBIT_ITEMS.map((tech, i) => (
+                        style={{ background: TECH_ORBIT_COLORS[i] }}
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ───────── SKILLS ───────── */}
         <section
           className="section-wrapper skills-section"
           id="skills"
-                          style={{ background: TECH_ORBIT_COLORS[i] }}
+        >
+          <div className="skills-bg-mesh" />
+          <div className="container">
+            <h2 className="section-heading anim-slide-up">
+              My <span className="highlight">Skills</span>
+            </h2>
+            <div className="skills-grid">
               {SKILLS.map((skill, i) => (
                 <TiltCard
                   key={skill.category}
@@ -524,95 +435,52 @@ export default function Home() {
             <div className="github-stats-bar anim-slide-up delay-1">
               <div className="github-stat">
                 <div className="github-stat-number">
-                  <AnimatedCounter target={45} />
+                  <AnimatedCounter target={GITHUB_REPO_COUNT} />
                 </div>
                 <div className="github-stat-label">Repositories</div>
               </div>
               <div className="github-stat">
                 <div className="github-stat-number">
-                  <AnimatedCounter target={6} />
+                  <AnimatedCounter target={PROJECTS.length} />
                 </div>
                 <div className="github-stat-label">Featured</div>
               </div>
               <div className="github-stat">
                 <div className="github-stat-number">
-                  <AnimatedCounter target={4} />
+                  <AnimatedCounter target={LIVE_DEMO_COUNT} />
                 </div>
                 <div className="github-stat-label">Live Demos</div>
               </div>
             </div>
-            <div className="projects-grid">
-              {PROJECTS.map((project, i) => (
-                <TiltCard
-                  key={project.title}
-                  className={`project-card anim-scale-in delay-${
-                    (i % 3) + 1
-                  }`}
-                >
-                  <div
-                    className="project-card-accent"
-                    style={{ background: project.gradient }}
-                  />
-                  <div className="project-card-body">
-                    <div className="project-card-header">
-                      <div>
-                        <h3 className="project-card-title">
-                          {project.title}
-                        </h3>
-                        <p className="project-card-subtitle">
-                          {project.subtitle}
-                        </p>
-                      </div>
-                      <span className="project-card-language">
-                        <span
-                          className="language-dot"
-                          style={{ background: project.languageColor }}
-                        />
-                        {project.language}
+            <ProjectsGrid />
+            <div className="other-projects anim-slide-up">
+              <h3 className="other-projects-title">Other builds</h3>
+              <ul className="other-projects-list">
+                {OTHER_PROJECTS.map((project) => (
+                  <li key={project.title}>
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="other-project"
+                    >
+                      <span className="other-project-title">
+                        {project.title} ↗
                       </span>
-                    </div>
-                    <p className="project-card-desc">
-                      {project.description}
-                    </p>
-                    <div className="project-card-tech">
-                      {project.tech.map((t) => (
-                        <span key={t} className="tech-tag">
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="project-card-links">
-                      <a
-                        href={project.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="project-link project-link--github"
-                      >
-                        ⌨️ Source
-                      </a>
-                      {project.live && (
-                        <a
-                          href={project.live}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="project-link project-link--live"
-                        >
-                          🚀 Live Demo
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </TiltCard>
-              ))}
+                      <span className="other-project-desc">{project.desc}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
             <div className="projects-section-footer anim-slide-up delay-3">
               <a
-                href="https://github.com/SamarthPD-21"
+                href={GITHUB_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="projects-github-link"
               >
-                💻 View All 45 Repositories on GitHub →
+                💻 View All {GITHUB_REPO_COUNT} Repositories on GitHub →
               </a>
             </div>
           </div>
@@ -661,7 +529,9 @@ export default function Home() {
         <img
           className="footer-top-shape"
           src={`${ASSET_PATHS.footer}/top-shape.svg`}
-          alt="footer shape"
+          alt=""
+          loading="lazy"
+          decoding="async"
         />
         <div className="container mx-auto px-6">
           <div className="footer-primary">
@@ -694,7 +564,7 @@ export default function Home() {
                 </span>
               </a>
               <a
-                href="https://github.com/SamarthPD-21"
+                href={GITHUB_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="contact-item"
@@ -722,7 +592,7 @@ export default function Home() {
             </div>
             <div className="footer-socials-container">
               <a
-                href="https://github.com/SamarthPD-21"
+                href={GITHUB_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="footer-social-link"
@@ -742,11 +612,15 @@ export default function Home() {
         <img
           src={`${ASSET_PATHS.footer}/home-footer-decoration-1.svg`}
           alt=""
+          loading="lazy"
+          decoding="async"
           className="footer-home-decoration-1"
         />
         <img
           src={`${ASSET_PATHS.footer}/home-footer-decoration-2.svg`}
           alt=""
+          loading="lazy"
+          decoding="async"
           className="footer-home-decoration-2"
         />
       </footer>

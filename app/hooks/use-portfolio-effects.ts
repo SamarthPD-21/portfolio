@@ -2,69 +2,91 @@
 
 import { useEffect, useState } from "react";
 
+const REVEAL_SELECTOR =
+  ".anim-fade-in, .anim-slide-up, .anim-pop-in, .anim-scale-in, .animation--fade-in, .animation--pop-in, .animation--pop-fade-in";
+
+function prefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 export function useScrollAnimation() {
   useEffect(() => {
+    const targets = document.querySelectorAll(REVEAL_SELECTOR);
+
+    if (prefersReducedMotion()) {
+      targets.forEach((target) => target.classList.add("is-visible"));
+      return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
           }
         });
       },
       { threshold: 0.08, rootMargin: "0px 0px -40px 0px" }
     );
 
-    const targets = document.querySelectorAll(
-      ".anim-fade-in, .anim-slide-up, .anim-pop-in, .anim-scale-in, .animation--fade-in, .animation--pop-in, .animation--pop-fade-in"
-    );
     targets.forEach((target) => observer.observe(target));
 
     return () => observer.disconnect();
   }, []);
 }
 
-export function useParallax() {
+/**
+ * Parallax + scroll progress share one rAF-throttled listener and write
+ * straight to the DOM, so scrolling never triggers a React re-render.
+ */
+export function useScrollEffects() {
   useEffect(() => {
+    const root = document.documentElement;
+    const layers = prefersReducedMotion()
+      ? []
+      : Array.from(
+          document.querySelectorAll<HTMLElement>("[data-parallax]"),
+          (element) => ({
+            element,
+            speed: parseFloat(element.dataset.parallax || "0"),
+          })
+        );
+    const hero = document.getElementById("hero");
     let ticking = false;
+
+    const update = () => {
+      const scrollY = window.scrollY;
+      const docHeight = root.scrollHeight - window.innerHeight;
+      root.style.setProperty(
+        "--scroll-progress",
+        String(docHeight > 0 ? scrollY / docHeight : 0)
+      );
+
+      // Parallax layers are only visible inside the hero.
+      if (!hero || scrollY <= hero.offsetHeight) {
+        layers.forEach(({ element, speed }) => {
+          element.style.transform = `translate3d(0, ${scrollY * speed}px, 0)`;
+        });
+      }
+      ticking = false;
+    };
 
     const handleScroll = () => {
       if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const scrollY = window.scrollY;
-          document
-            .querySelectorAll<HTMLElement>("[data-parallax]")
-            .forEach((element) => {
-              const speed = parseFloat(element.dataset.parallax || "0");
-              element.style.transform = `translateY(${scrollY * speed}px)`;
-            });
-          ticking = false;
-        });
         ticking = true;
+        window.requestAnimationFrame(update);
       }
     };
 
+    update();
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-}
-
-export function useScrollProgress() {
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      const docHeight =
-        document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(docHeight > 0 ? (scrollTop / docHeight) * 100 : 0);
+    window.addEventListener("resize", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
     };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  return progress;
 }
 
 export function useActiveSection(ids: readonly string[]) {

@@ -28,7 +28,7 @@ export const SKILLS = [
     category: "Databases",
     icon: "🗄️",
     color: "#95b77e",
-    items: ["MongoDB", "PostgreSQL", "Redis", "Qdrant"],
+    items: ["MongoDB", "PostgreSQL", "Redis", "SQLite", "Qdrant"],
   },
   {
     category: "Cloud & DevOps",
@@ -50,13 +50,76 @@ export const SKILLS = [
   },
 ] as const;
 
-export const PROJECTS = [
+export type ProjectCategory = "Systems" | "AI" | "Full-Stack" | "Developer Tools";
+
+export type Project = {
+  title: string;
+  subtitle: string;
+  summary: string;
+  highlights: readonly string[];
+  tech: readonly string[];
+  categories: readonly ProjectCategory[];
+  featured?: boolean;
+  team?: string;
+  gradient: string;
+  github: string;
+  live?: string;
+  language: string;
+  languageColor: string;
+};
+
+export const PROJECTS: readonly Project[] = [
+  {
+    title: "AxiomDB",
+    subtitle: "Relational Database Engine from Scratch",
+    summary:
+      "A single-process relational database written in modern C++20: SQL goes from lexer to AST to a cost-based planner and a Volcano-style executor, on top of page-based storage, with ACID transactions and crash recovery.",
+    highlights: [
+      "Buffer pool with an LRU-K evictor over slotted-page heap files and a B+Tree primary index",
+      "Strict two-phase locking plus write-ahead logging with crash recovery",
+      "Pluggable LSM-tree engine (MemTable, SSTables, Bloom filters, compaction) behind a shared storage interface",
+      "Benchmarked LSM vs. heap+B+Tree: ~2.7× faster loads and ~8× lower p50 point-lookup latency at 100k rows",
+      "90 Catch2 test cases (43k+ assertions), including crash-recovery tests",
+    ],
+    tech: ["C++20", "CMake", "B+Tree", "LSM-Tree", "WAL", "2PL"],
+    categories: ["Systems"],
+    featured: true,
+    team: "Team of 2",
+    gradient: "linear-gradient(135deg, #1c2e57, #6da0c4)",
+    github: "https://github.com/SamarthPD-21/AxiomDB",
+    language: "C++",
+    languageColor: "#f34b7d",
+  },
+  {
+    title: "WriteTex",
+    subtitle: "AI Copilot for Overleaf (Chrome Extension)",
+    summary:
+      "Manifest V3 extension that adds an AI side panel to Overleaf: it proposes edits to a LaTeX resume or cover letter, shows a reviewable diff, and applies accepted changes directly in Overleaf's editor.",
+    highlights: [
+      "Page-context bridge that drives Overleaf's CodeMirror 6 editor through transactions, so undo and collaboration keep working",
+      "LaTeX-aware patching: exact, whitespace-insensitive and fuzzy matching with brace-depth scanning, refusing ambiguous edits",
+      "ATS score and job-description keyword-gap analysis",
+      "Bring-your-own-key router across Claude, Gemini and OpenAI; 124 Vitest tests",
+    ],
+    tech: ["TypeScript", "React", "Chrome MV3", "CodeMirror 6", "Vitest"],
+    categories: ["AI", "Developer Tools"],
+    gradient: "linear-gradient(135deg, #47a248, #6da0c4)",
+    github: "https://github.com/SamarthPD-21/WriteTex",
+    language: "TypeScript",
+    languageColor: "#3178c6",
+  },
   {
     title: "InsightLM",
     subtitle: "AI Document Intelligence Workspace",
-    description:
-      "Full-stack document intelligence platform with Corrective RAG (CRAG), Qdrant vector search, and Hugging Face models. Features intelligent query rewriting, batch relevance judging, adaptive retry with feedback, and real-time SSE streaming with an integrated in-app PDF viewer.",
-    tech: ["Next.js", "Express.js", "Qdrant", "Hugging Face", "RAG"],
+    summary:
+      "Upload a PDF and chat with it: answers stream back with page-level citations from a Corrective RAG (CRAG) pipeline over Qdrant vector search.",
+    highlights: [
+      "CRAG loop: LLM query rewrite, retrieval, LLM relevance judging, then retry with judge feedback",
+      "Robust judge parsing with a token-overlap fallback when the LLM's output is malformed",
+      "SSE streaming of sources then content; citations jump the in-app PDF viewer to the page",
+    ],
+    tech: ["Next.js", "Express.js", "LangChain", "Qdrant", "Hugging Face"],
+    categories: ["AI", "Full-Stack"],
     gradient: "linear-gradient(135deg, #ff6563, #ffbb71)",
     github: "https://github.com/SamarthPD-21/InsightLM",
     live: "https://insight-lm-gamma.vercel.app",
@@ -64,66 +127,91 @@ export const PROJECTS = [
     languageColor: "#3178c6",
   },
   {
+    title: "SPD Global",
+    subtitle: "Full-Stack E-Commerce Platform",
+    summary:
+      "MERN storefront for Indian handicraft and export goods with auth, cart, wishlist, reviews, an admin panel and Stripe Checkout, built up over 39 commits.",
+    highlights: [
+      "Stripe Checkout with server-side session verification and idempotent order creation",
+      "Atomic stock reservation via conditional decrements with rollback",
+      "Admin dashboard with a paginated audit log and Cloudinary image uploads",
+    ],
+    tech: ["Next.js", "Redux Toolkit", "Express", "MongoDB", "Stripe"],
+    categories: ["Full-Stack"],
+    gradient: "linear-gradient(135deg, #b04447, #d4a76a)",
+    github: "https://github.com/SamarthPD-21/Spd-Global",
+    live: "https://spd-global.vercel.app",
+    language: "TypeScript",
+    languageColor: "#3178c6",
+  },
+  {
+    title: "TypeAhead",
+    subtitle: "Distributed Autocomplete Engine",
+    summary:
+      "Search-suggestion service that separates read-heavy prefix lookups from write-heavy query ingestion, with trending results ranked by time decay.",
+    highlights: [
+      "Consistent hash ring (SHA-256, virtual nodes, binary-search routing) sharding prefixes across Redis nodes",
+      "Buffered writes flushed in batches to SQLite (WAL mode) with stale-prefix invalidation",
+      "Ranking blends log-scaled popularity with exponentially decayed recency",
+    ],
+    tech: ["Python", "FastAPI", "Redis", "SQLite"],
+    categories: ["Systems"],
+    gradient: "linear-gradient(135deg, #3572a5, #95b77e)",
+    github: "https://github.com/SamarthPD-21/TypeAhead",
+    language: "Python",
+    languageColor: "#3572a5",
+  },
+  {
     title: "Clonify",
-    subtitle: "AI Website Cloner Agent",
-    description:
-      "Conversational CLI agent that scrapes and clones any website using Playwright + Gemini AI. Analyzes design, extracts content, and generates faithful HTML/CSS/JS clones with self-improving agent loops evaluating quality >= 7/10.",
-    tech: ["Playwright", "Gemini API", "Node.js", "AI Agent"],
-    gradient: "linear-gradient(135deg, #6da0c4, #95b77e)",
+    subtitle: "AI Website Cloner",
+    summary:
+      "CLI that scrapes a live site with Playwright and rebuilds it as HTML/CSS/JS using an LLM generate-evaluate-improve pipeline.",
+    highlights: [
+      "Extracts computed colors, fonts and section structure in-page into a design brief",
+      "Plans sections, generates each one, then self-critiques until it scores ≥ 7/10",
+    ],
+    tech: ["Node.js", "Playwright", "Gemini API"],
+    categories: ["AI", "Developer Tools"],
+    gradient: "linear-gradient(135deg, #6da0c4, #a855f7)",
     github: "https://github.com/SamarthPD-21/clonify",
-    live: "",
-    language: "HTML",
-    languageColor: "#e34c26",
+    language: "JavaScript",
+    languageColor: "#f1e05a",
+  },
+];
+
+export const OTHER_PROJECTS = [
+  {
+    title: "Multithreaded HTTP Server",
+    desc: "HTTP/1.1 server on raw sockets with a thread pool, keep-alive and path-traversal protection; Python stdlib only.",
+    github: "https://github.com/SamarthPD-21/MultiThreadedServer",
+  },
+  {
+    title: "Outreach Engine",
+    desc: "CLI pipeline that researches companies and drafts cold emails where every claim must cite a saved source.",
+    github: "https://github.com/SamarthPD-21/Outreach_engine",
+  },
+  {
+    title: "GradeSense",
+    desc: "LLM-assisted answer-sheet grading: the model interprets, code computes the scores, and pdf-lib draws the evidence boxes.",
+    github: "https://github.com/SamarthPD-21/Grading-Annotation-Tool",
   },
   {
     title: "GitUpSkill",
-    subtitle: "AI Developer Skill Recommendation",
-    description:
-      "AI-powered platform analyzing GitHub repositories to identify developer strengths and skill gaps. Features GitHub OAuth, intelligent README analysis, deterministic recommendation engine, and personalized upskilling roadmap generation.",
-    tech: ["Next.js", "Spring Boot", "MongoDB", "OAuth 2.0"],
-    gradient: "linear-gradient(135deg, #d4a76a, #ff6563)",
+    desc: "Spring Boot + Next.js app that reads your GitHub repos and READMEs to map skills and suggest a learning roadmap.",
     github: "https://github.com/SamarthPD-21/GitUpSkill",
-    live: "https://end-term-spring.vercel.app",
-    language: "Java",
-    languageColor: "#b07219",
-  },
-  {
-    title: "Personafy",
-    subtitle: "Persona-Driven AI Chat Experience",
-    description:
-      "Polished full-stack chatbot with switchable AI personas, each with unique system prompts and visual themes. Features premium glassmorphism UI, spring-based Framer Motion animations, typewriter streaming, and persistent local threading.",
-    tech: ["Next.js", "Gemini API", "Framer Motion", "Tailwind CSS"],
-    gradient: "linear-gradient(135deg, #a855f7, #6da0c4)",
-    github: "https://github.com/SamarthPD-21/Personafy",
-    live: "https://personafy-nine.vercel.app/",
-    language: "TypeScript",
-    languageColor: "#3178c6",
-  },
-  {
-    title: "RideShare",
-    subtitle: "Full-Stack Ride-Sharing Platform",
-    description:
-      "Complete Uber-like ride-sharing application with JWT authentication, role-based access control (Passengers & Drivers), comprehensive ride lifecycle tracking with timestamps, duration calculation, and a glassmorphic dark-mode UI.",
-    tech: ["Spring Boot", "MongoDB", "Next.js", "JWT"],
-    gradient: "linear-gradient(135deg, #95b77e, #d4a76a)",
-    github: "https://github.com/SamarthPD-21/Uber-Clone",
-    live: "https://ride-share-silk-rho.vercel.app",
-    language: "Java",
-    languageColor: "#b07219",
-  },
-  {
-    title: "GFI Finder",
-    subtitle: "Open-Source Contribution Discovery",
-    description:
-      "Helps developers discover active GitHub repos and beginner-friendly issues worth contributing to. Filters inactive repositories, ranks by stars, issue volume, and contributor activity, with detailed repo pages showing open issues.",
-    tech: ["Next.js", "GitHub API", "Tailwind CSS"],
-    gradient: "linear-gradient(135deg, #ff6563, #a855f7)",
-    github: "https://github.com/SamarthPD-21/GFI_Finder",
-    live: "",
-    language: "TypeScript",
-    languageColor: "#3178c6",
   },
 ] as const;
+
+export const PROJECT_CATEGORIES: readonly ProjectCategory[] = [
+  "Systems",
+  "AI",
+  "Full-Stack",
+  "Developer Tools",
+];
+
+export const GITHUB_URL = "https://github.com/SamarthPD-21";
+export const GITHUB_REPO_COUNT = 61;
+export const LIVE_DEMO_COUNT = PROJECTS.filter((project) => project.live).length;
 
 export const ACHIEVEMENTS = [
   {
